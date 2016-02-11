@@ -21,7 +21,7 @@ void updateAlarms(CalculationState *currState){
 void postAlarms(CalculationState *currState){	
   OS_ERR err;
 
-  OSFlagPost(&g_alarm_flags, ALARM_HIGH, OS_OPT_POST_FLAG_SET,&err);
+  OSFlagPost(&g_alarm_flags, (OS_FLAGS)currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
   assert(OS_ERR_NONE == err);
 }
 
@@ -84,9 +84,6 @@ void calculator_task(void* vptr) {
   calcState.elapsed_time_s = 0;
   calcState.current_alarm = CALC_ALARM_NONE;
   calcState.display_units = CALC_UNITS_METRIC;
-  
-  OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
-  assert(OS_ERR_NONE == err);
   
   for (;;) 
   {

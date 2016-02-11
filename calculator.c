@@ -12,7 +12,7 @@
 void updateAlarms(CalculationState *currState){
   if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml)
     currState->current_alarm|=ALARM_HIGH;
-  if(15<currState->rate_mm_per_m)
+  if(-15000>=currState->rate_mm_per_m)
     currState->current_alarm|=ALARM_MEDIUM;
   if(40000<currState->depth_mm)
     currState->current_alarm|=ALARM_LOW;  

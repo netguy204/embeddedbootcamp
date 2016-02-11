@@ -78,10 +78,24 @@ void calculator_task(void* vptr) {
   }
     
     adc = adc_read();
-    // calculate DIVE RATE  int32_t rate_mm_per_m;
-    calcState.rate_mm_per_m =  1000 * adc2rate(adc);
+  
+    // calculate ASCENT RATE  int32_t rate_mm_per_m;
+    int32_t descent_rate = adc2rate(adc);
+    
+    if(calcState.depth_mm > 0 || (calcState.depth_mm == 0 && descent_rate > 0)) {
+        calcState.rate_mm_per_m = 1000 * descent_rate;
+    } else {
+        calcState.rate_mm_per_m = 0;
+    }
+    
     // calculate DEPTH  int32_t depth_mm;
-    calcState.depth_mm += 2 * 0.5 * depth_change_in_mm(calcState.rate_mm_per_m);
+    calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m);
+       
+    // no flying divers
+    if(calcState.depth_mm < 0) {
+        calcState.depth_mm = 0;
+    }
+    
     // calculate  uint32_t air_ml;
     calcState.air_ml += 2 * 0.5 * gas_rate_in_cl(calcState.depth_mm);
     // calculate  elapsed time (always a delta of 500 ms)

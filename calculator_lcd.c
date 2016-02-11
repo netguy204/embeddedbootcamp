@@ -25,14 +25,16 @@ static void lcd_printf(uint8_t line, const char* msg, ...) {
 #define ML_TO_L(ml) (ml / 1000)
 
 void calculator_lcd_update(CalculationState* state) {
+  BSP_GraphLCD_Clear();
+    
   lcd_printf(0, "SCUBIE DUUBA");
   if(state->display_units == CALC_UNITS_METRIC) {
-    lcd_printf(2, "DEPTH: %4u M", MM_TO_M(state->depth_mm));
-    lcd_printf(3, "RATE: %4u M", MM_TO_M(state->rate_mm_per_m));
+    lcd_printf(2, "DEPTH: %4d M", MM_TO_M(state->depth_mm));
+    lcd_printf(3, "RATE: %4d M", MM_TO_M(state->rate_mm_per_m));
     
   } else {
-    lcd_printf(2, "DEPTH: %4u FT", MM_TO_FT(state->depth_mm));
-    lcd_printf(3, "RATE: %4u FT", MM_TO_FT(state->rate_mm_per_m));
+    lcd_printf(2, "DEPTH: %4d FT", MM_TO_FT(state->depth_mm));
+    lcd_printf(3, "RATE: %4d FT", MM_TO_FT(state->rate_mm_per_m));
   }
   
   lcd_printf(4, "AIR: %4u L", ML_TO_L(state->depth_mm));

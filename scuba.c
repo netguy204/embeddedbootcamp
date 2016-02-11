@@ -89,8 +89,7 @@ gas_to_surface_in_cl(uint32_t depth_in_mm)
 
 static
 int32_t map(int32_t value, int32_t vmin, int32_t vmax, int32_t omin, int32_t omax) {
-  int32_t scale = (omax - omin) / (vmax - vmin);
-  return omin + (value - vmin) * scale;
+  return omin + (((value - vmin) * (omax - omin)) / (vmax - vmin));
 }
 
 int32_t

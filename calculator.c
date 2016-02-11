@@ -27,6 +27,34 @@ uint16_t getTankChange_ml(){
   return buttonPresses*5000;
 }
 
+uint8_t g_b_is_new_timer;
+
+void timer_init() {
+    g_b_is_new_timer = 1u;
+}
+
+void timer_update(CalculationState *state) {
+    if (state->depth_mm > 0)
+    {
+        if (is_timer_off()) 
+        {
+            start_timer(g_b_is_new_timer);
+            // This will only trigger the first time we dive
+            if (g_b_is_new_timer)
+            {
+                g_b_is_new_timer = 0;
+            }
+        }
+    }
+    else
+    {
+        if (!g_b_is_new_timer)
+        {
+            stop_timer();
+        }
+    }
+}
+
 void calculator_task(void* vptr) {
 
 
@@ -34,12 +62,11 @@ void calculator_task(void* vptr) {
   uint16_t tankChange_ml = 0;
   uint16_t adc = 0;
   OS_ERR err;
-  uint8_t b_is_new_timer = 1u;
   
 
   calculator_lcd_init();
   adc_init();
-  
+  timer_init();
   
   // init values
   calcState.depth_mm = 0;
@@ -97,29 +124,20 @@ void calculator_task(void* vptr) {
     if(calcState.depth_mm < 0) {
         calcState.depth_mm = 0;
     }
- 
-    if (calcState.depth_mm > 0)
-    {
-        if (is_timer_off()) 
-        {
-            start_timer(b_is_new_timer);
-            // This will only trigger the first time we dive
-            if (b_is_new_timer)
-            {
-                b_is_new_timer = 0;
-            }
-        }
-    }
-    else
-    {
-        if (!b_is_new_timer)
-        {
-            stop_timer();
-        }
-    }
 
-
-    // determine  DisplayUnits - check if SW2 has been toggled
+    // calculate  uint32_t air_ml;
+    uint32_t gas_rate = gas_rate_in_cl(calcState.depth_mm) * 10; // cl -> ml
+    if(gas_rate < calcState.air_ml) {
+      calcState.air_ml -= gas_rate;
+    } else {
+      calcState.air_ml = 0;
+    }
+    
+    // apply the timer logic
+    timer_update(&calcState);
+    
+    // calculate  elapsed time (always a delta of 500 ms)
+    calcState.elapsed_time_s = get_dive_time_in_seconds();
 
     // determine alarm state  enum CurrentAlarm current_alarm;
     calculator_lcd_update(&calcState);

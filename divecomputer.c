@@ -82,9 +82,6 @@ static OS_TCB   g_startup_tcb;
 static OS_TCB   g_debounce_tcb;
 static OS_TCB   g_calc_tcb;
 
-// Allocate Shared OS Objects
-OS_SEM      g_sw2_sem;
-
 // Timers
 static OS_TMR   g_health_timer;
 /*

@@ -167,9 +167,16 @@ alarm_task (void * p_arg)
 		
         // Assume for now there's no new task creation to do.
         b_create_speaker_task = 0;
-		
+        
+        OS_FLAGS flags = OSFlagPend(&g_alarm_flags,
+                                    ALARM_HIGH|ALARM_MEDIUM|ALARM_LOW|ALARM_NONE,
+                                    0,
+                                    OS_OPT_PEND_FLAG_SET_ANY|OS_OPT_PEND_FLAG_CONSUME|OS_OPT_PEND_BLOCKING,
+                                    0,
+                                    &err);
+        assert(OS_ERR_NONE == err);
         // Ensure the proper alarm is playing.
-        if (/* TODO: ALARM_HIGH */)
+        if (ALARM_HIGH&flags)
         {
             // High priority alarm should be playing.
             if (p_waveform != &alarm_high)
@@ -191,7 +198,7 @@ alarm_task (void * p_arg)
 		b_create_speaker_task = 1;
 	    }
 	}
-        else if (/* TODO: ALARM_MED */)
+        else if (ALARM_MEDIUM&flags)
         {
             // Medium priority alarm should be playing.
 	    if (p_waveform != &alarm_medium)
@@ -213,7 +220,7 @@ alarm_task (void * p_arg)
 		b_create_speaker_task = 1;
 	    }
 	}
-        else if (/* TODO: ALARM_LOW */)
+        else if (ALARM_LOW&flags)
         {
             // Low priority alarm should be playing.
 	    if (p_waveform != &alarm_low)
@@ -235,7 +242,7 @@ alarm_task (void * p_arg)
 	        b_create_speaker_task = 1;
 	    }
 	}
-        else if (/* TODO: ALARM_NONE */)
+        else if (ALARM_NONE&flags)
         {
             // No alarm should be playing.
 	    if (b_speaker_task_alive)

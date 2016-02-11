@@ -1210,6 +1210,9 @@
     <name>$PROJ_DIR$\adcisr.s</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\alarm.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\bsp_cfg.h</name>
   </file>
   <file>
@@ -1241,6 +1244,9 @@
   </file>
   <file>
     <name>$PROJ_DIR$\pushbutton.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\scuba.c</name>
   </file>
 </project>
 

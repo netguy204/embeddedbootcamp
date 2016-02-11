@@ -113,7 +113,7 @@ void calculator_task(void* vptr) {
 
     /* RATE and DEPTH */
     // calculate ASCENT RATE  int32_t rate_mm_per_m;
-    int32_t descent_rate = adc2rate(adc);
+    int32_t descent_rate = ADC2RATE(adc);
     
     if(calcState.depth_mm > 0 || (calcState.depth_mm == 0 && descent_rate > 0)) {
         calcState.rate_mm_per_m = 1000 * descent_rate;
@@ -122,7 +122,7 @@ void calculator_task(void* vptr) {
     }
     
     // calculate DEPTH  int32_t depth_mm;
-    calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m); 
+    calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m / 1000); 
     
     // no flying divers
     if(calcState.depth_mm < 0) {

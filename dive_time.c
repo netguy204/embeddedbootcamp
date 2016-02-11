@@ -72,11 +72,16 @@ void
 stop_timer(void)
 {
     OS_ERR err;
-    OSTmrStop(&g_dive_timer,
-              OS_OPT_TMR_NONE,
-              NO_ARGS,
-              &err);
-    assert(OS_ERR_NONE == err);
+    if(OS_TMR_STATE_RUNNING == OSTmrStateGet(&g_dive_timer, &err)) {     
+      OSTmrStop(&g_dive_timer,
+                OS_OPT_TMR_NONE,
+                NO_ARGS,
+                &err);
+      assert(OS_ERR_NONE == err);
+    } else {
+      // make sure the status call didn't fail
+      assert(OS_ERR_NONE == err);
+    }
     gb_is_timer_stopped = 1;
 }
 

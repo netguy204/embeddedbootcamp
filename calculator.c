@@ -105,12 +105,6 @@ void calculator_task(void* vptr) {
         {
             stop_timer();
         }
-        else
-        {
-            // We should never be here. If a timer wasn't created, it shouldn't
-            // be getting stopped
-            assert(0);
-        }
     }
 
     // calculate  uint32_t air_ml;

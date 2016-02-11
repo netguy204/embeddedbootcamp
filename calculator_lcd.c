@@ -8,6 +8,8 @@ void calculator_lcd_init() {
   BSP_GraphLCD_SetFont(GLYPH_FONT_8_BY_8);
 }
 
+static char* blank_line = "                ";
+
 static void lcd_printf(uint8_t line, const char* msg, ...) {
   va_list args;
   char  p_str[LCD_CHARS_PER_LINE+1];
@@ -15,6 +17,8 @@ static void lcd_printf(uint8_t line, const char* msg, ...) {
   va_start(args, msg);
   
   vsprintf(p_str, msg, args);
+  
+  BSP_GraphLCD_String(line, blank_line);
   BSP_GraphLCD_String(line, (char const *) p_str);
   
   va_end(args);
@@ -25,7 +29,7 @@ static void lcd_printf(uint8_t line, const char* msg, ...) {
 #define ML_TO_L(ml) (ml / 1000)
 
 void calculator_lcd_update(CalculationState* state) {
-  BSP_GraphLCD_Clear();
+  //BSP_GraphLCD_Clear();
     
   lcd_printf(0, "SCUBIE DUUBA");
   if(state->display_units == CALC_UNITS_METRIC) {

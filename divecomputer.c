@@ -31,6 +31,7 @@
 #include "pushbutton.h"
 #include "common.h"
 #include "adc.h"
+#include "dive_time.h"
 
 /*
 *********************************************************************************************************
@@ -247,6 +248,7 @@ startup_task (void * p_arg)
     // Initialize the reentrant LED driver.
     protectedLED_Init();
 
+#if 0
     // Create the LED flasher tasks.
     OSTaskCreate((OS_TCB     *)&g_led5_tcb,
                  (CPU_CHAR   *)"LED5 Flasher",
@@ -347,7 +349,14 @@ startup_task (void * p_arg)
                  (OS_OPT      ) 0,
                  (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
-
+#endif
+    start_timer(1);
+    
+    OSTimeDlyHMSM(0, 0, 10, 500, OS_OPT_TIME_HMSM_STRICT, &err);
+    assert(OS_ERR_NONE == err);
+    uint32_t mytime = get_dive_time_in_seconds();
+    assert(10u == mytime);
+    
     OSTmrCreate(&g_health_timer,
                 "Scuba Health Timer",
                 0,
@@ -414,10 +423,9 @@ void  main (void)
                  (OS_OPT      ) 0,
                  (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
-
+    
     OSStart(&err);                                              /* Start multitasking (i.e. give control to uC/OS-III). */
 
     // We should never get here.
     assert(0);
 }
-

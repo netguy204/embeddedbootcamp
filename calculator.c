@@ -3,10 +3,12 @@
 
 #include "scuba.h"
 #include  "assert.h"
+#include "adc.h"
+#include "pushbutton.h"
+
 #include  <os.h>
 
-
-
+// Allocate Shared OS Objects
 OS_FLAG_GRP g_alarm_flags;
 
 void post_alarms(struct CalculationState *currState){	
@@ -42,8 +44,8 @@ void calculator_task(void* vptr) {
   for (;;) 
   {
     // get adc from queue
-    adc = 0; // TEMP
-// calculate DEPTH  int32_t depth_mm;
+    adc = adc_read(); 
+  // calculate DEPTH  int32_t depth_mm;
   calcState.depth_mm += 2 * 0.5 * depth_change_in_mm(calcState.rate_mm_per_m);
 // calculate DIVE RATE  int32_t rate_mm_per_m;
     calcState.rate_mm_per_m =  1000 * ADC2RATE(adc);
@@ -51,8 +53,23 @@ void calculator_task(void* vptr) {
   calcState.air_ml += 2 * 0.5 * gas_rate_in_cl(calcState.depth_mm);
 // calculate  elapsed time (always a delta of 500 ms)
   calcState.elapsed_time_s += 0.5;
+  while (1)
+  {
 // determine  DisplayUnits - check if SW2 has been toggled
-  
+  OSSemPend(&g_sw2_sem, 0, OS_OPT_PEND_NON_BLOCKING, 0, &err);
+     // Check for change
+  if (OS_ERR_NONE == err)
+  {
+    calcState.display_units = (calcState.display_units == CALC_UNITS_METRIC ? CALC_UNITS_IMPERIAL : CALC_UNITS_METRIC);
+  } else if (OS_ERR_PEND_WOULD_BLOCK == err) 
+  {
+    // no update 
+    break;
+  } else 
+  {
+    assert(0); // error state
+  }
+  }
 // determine alarm state  enum CurrentAlarm current_alarm;
       calculator_lcd_update(&calcState);
       

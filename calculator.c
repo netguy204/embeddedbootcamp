@@ -13,29 +13,29 @@ void updateAlarms(CalculationState *currState){
   uint8_t any_alarms = 0;
   
   if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml) {
-    currState->current_alarm|=ALARM_HIGH;
+    currState->current_alarms |= ALARM_HIGH;
     any_alarms = 1;
   }
   
   if(-15000>=currState->rate_mm_per_m) {
-    currState->current_alarm|=ALARM_MEDIUM;
+    currState->current_alarms |= ALARM_MEDIUM;
     any_alarms = 1;
   }
   
   if(40000<currState->depth_mm) {
-    currState->current_alarm|=ALARM_LOW;
+    currState->current_alarms |= ALARM_LOW;
     any_alarms = 1;
   }
   
   if(!any_alarms) {
-    currState->current_alarm = ALARM_NONE;
+    currState->current_alarms = ALARM_NONE;
   }
 }
 
 void postAlarms(CalculationState *currState){	
   OS_ERR err;
 
-  OSFlagPost(&g_alarm_flags, (OS_FLAGS)currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
+  OSFlagPost(&g_alarm_flags, (OS_FLAGS)currState->current_alarms, OS_OPT_POST_FLAG_SET,&err);
   assert(OS_ERR_NONE == err);
 }
 
@@ -96,7 +96,7 @@ void calculator_task(void* vptr) {
   calcState.rate_mm_per_m = 0;
   calcState.air_ml = 50 * 1000;  // init air in ml
   calcState.elapsed_time_s = 0;
-  calcState.current_alarm = CALC_ALARM_NONE;
+  calcState.current_alarms = ALARM_NONE;
   calcState.display_units = CALC_UNITS_METRIC;
   
   for (;;) 

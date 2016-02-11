@@ -58,11 +58,11 @@ void calculator_lcd_update(CalculationState* state) {
   
       
   char* alarm;
-  if(state->current_alarm & CALC_ALARM_HIGH) {
+  if(ALARM_HIGH & state->current_alarms) {
     alarm = "HIGH";
-  } else if(state->current_alarm & CALC_ALARM_MEDIUM) {
+  } else if(ALARM_MEDIUM & state->current_alarms) {
     alarm = "MEDIUM";
-  } else if(state->current_alarm & CALC_ALARM_LOW) {
+  } else if(ALARM_LOW & state->current_alarms) {
     alarm = "LOW";
   } else {
     alarm = "NONE";

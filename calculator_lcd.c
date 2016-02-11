@@ -51,22 +51,14 @@ void calculator_lcd_update(CalculationState* state) {
   lcd_printf(5, "EDT:      %01u:%02u:%02u", hours, minutes, seconds);
   
   char* alarm;
-  switch(state->current_alarm) {
-  case CALC_ALARM_NONE:
-    alarm = "NONE";
-    break;
-  case CALC_ALARM_LOW:
-    alarm = "LOW";
-    break;
-  case CALC_ALARM_MEDIUM:
-    alarm = "MEDIUM";
-    break;
-  case CALC_ALARM_HIGH:
+  if(state->current_alarm & CALC_ALARM_HIGH) {
     alarm = "HIGH";
-    break;
-  default:
-    alarm = "UNKNOWN";
-    break;
+  } else if(state->current_alarm & CALC_ALARM_MEDIUM) {
+    alarm = "MEDIUM";
+  } else if(state->current_alarm & CALC_ALARM_LOW) {
+    alarm = "LOW";
+  } else {
+    alarm = "NONE";
   }
   
   lcd_printf(7, "Alarm:    %s", alarm);

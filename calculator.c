@@ -2,6 +2,7 @@
 #include "calculator_lcd.h"
 
 #include "scuba.h"
+#include "adc.h"
 #include  "assert.h"
 #include  <os.h>
 

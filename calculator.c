@@ -7,8 +7,9 @@
 
 
 
-OS_FLAG_GRP g_alarm_flags;
-OS_SEM g_sw1_sem;
+OS_FLAG_GRP     g_alarm_flags;
+OS_SEM          g_sw1_sem;
+OS_SEM          g_sw2_sem;
 
 void post_alarms(struct CalculationState *currState){	
   OS_ERR err;

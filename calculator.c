@@ -25,6 +25,7 @@ void calculator_task(void* vptr) {
   
   
   calculator_lcd_init();
+  adc_init();
   
   
   // init values

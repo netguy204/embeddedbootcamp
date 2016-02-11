@@ -1216,6 +1216,9 @@
     <name>$PROJ_DIR$\bsp_cfg.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\calculator.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\cpu_cfg.h</name>
   </file>
   <file>

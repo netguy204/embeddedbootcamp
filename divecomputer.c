@@ -126,6 +126,10 @@ startup_task (void * p_arg)
     
     // Initialize the reentrant LED driver.
     protectedLED_Init();
+    
+    // Create flags shared by alarm and calculator tasks
+    OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
+    assert(OS_ERR_NONE == err);
 
     // Create the semaphores signaled by the button debouncer.
     OSSemCreate(&g_sw1_sem, "Switch 1", 0, &err);

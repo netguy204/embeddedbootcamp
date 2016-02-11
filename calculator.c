@@ -47,9 +47,6 @@ void calculator_task(void* vptr) {
   calcState.current_alarm = CALC_ALARM_NONE;
   calcState.display_units = CALC_UNITS_METRIC;
   
-  OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
-  assert(OS_ERR_NONE == err);
-  
   for (;;) 
   {
     // get adc from queue

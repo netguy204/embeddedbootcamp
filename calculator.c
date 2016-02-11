@@ -10,12 +10,26 @@
 #include  <os.h>
 
 void updateAlarms(CalculationState *currState){
-  if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml)
+  uint8_t any_alarms = 0;
+  
+  if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml) {
     currState->current_alarm|=ALARM_HIGH;
-  if(-15000>=currState->rate_mm_per_m)
+    any_alarms = 1;
+  }
+  
+  if(-15000>=currState->rate_mm_per_m) {
     currState->current_alarm|=ALARM_MEDIUM;
-  if(40000<currState->depth_mm)
-    currState->current_alarm|=ALARM_LOW;  
+    any_alarms = 1;
+  }
+  
+  if(40000<currState->depth_mm) {
+    currState->current_alarm|=ALARM_LOW;
+    any_alarms = 1;
+  }
+  
+  if(!any_alarms) {
+    currState->current_alarm = ALARM_NONE;
+  }
 }
 
 void postAlarms(CalculationState *currState){	

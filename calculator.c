@@ -5,8 +5,8 @@
 #include "adc.h"
 
 #include "scuba.h"
-#include "adc.h"
-#include  "assert.h"
+#include "assert.h"
+#include "dive_time.h"
 #include  <os.h>
 
 void post_alarms(struct CalculationState *currState){	
@@ -33,6 +33,7 @@ void calculator_task(void* vptr) {
   struct  CalculationState calcState;
   uint16_t adc = 0;
   OS_ERR err;
+  uint8_t b_is_new_timer = 1u;
   
   
   calculator_lcd_init();
@@ -56,12 +57,34 @@ void calculator_task(void* vptr) {
     adc = 0; // TEMP
     // calculate DEPTH  int32_t depth_mm;
     calcState.depth_mm += 2 * 0.5 * depth_change_in_mm(calcState.rate_mm_per_m);
+    if (calcState.depth_mm < 0) 
+    {
+        start_timer(b_is_new_timer);
+        // This will only trigger the first time we dive
+        if (b_is_new_timer)
+        {
+            b_is_new_timer = 0;
+        }
+    }
+    else
+    {
+        if (!b_is_new_timer)
+        {
+            stop_timer();
+        }
+        else
+        {
+            // We should never be here. If a timer wasn't created, it shouldn't
+            // be getting stopped
+            assert(0);
+        }
+    }
     // calculate DIVE RATE  int32_t rate_mm_per_m;
     calcState.rate_mm_per_m =  1000 * ADC2RATE(adc);
     // calculate  uint32_t air_ml;
     calcState.air_ml += 2 * 0.5 * gas_rate_in_cl(calcState.depth_mm);
     // calculate  elapsed time (always a delta of 500 ms)
-    calcState.elapsed_time_s += 0.5;
+    calcState.elapsed_time_s = get_dive_time_in_seconds();
     // determine  DisplayUnits - check if SW2 has been toggled
 
     // determine alarm state  enum CurrentAlarm current_alarm;

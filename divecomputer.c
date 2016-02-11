@@ -79,7 +79,6 @@ static CPU_STK  g_led6_stack[TASK_STACK_SIZE];
 static CPU_STK  g_debounce_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw1_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw2_stack[TASK_STACK_SIZE];
-static CPU_STK  g_adc_stack[TASK_STACK_SIZE];
 static CPU_STK  g_calc_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
@@ -89,7 +88,6 @@ static OS_TCB   g_led6_tcb;
 static OS_TCB   g_debounce_tcb;
 static OS_TCB   g_sw1_tcb;
 static OS_TCB   g_sw2_tcb;
-static OS_TCB   g_adc_tcb;
 static OS_TCB   g_calc_tcb;
 
 // Allocate Shared OS Objects
@@ -326,22 +324,6 @@ startup_task (void * p_arg)
                  (void       *) 0,
                  (OS_PRIO     ) SW2_PRIO,
                  (CPU_STK    *)&g_sw2_stack[0],
-                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
-                 (CPU_STK_SIZE) TASK_STACK_SIZE,
-                 (OS_MSG_QTY  ) 0u,
-                 (OS_TICK     ) 0u,
-                 (void       *) 0,
-                 (OS_OPT      ) 0,
-                 (OS_ERR     *)&err);
-    assert(OS_ERR_NONE == err);
-
-    // Create the ADC task.
-    OSTaskCreate((OS_TCB     *)&g_adc_tcb,
-                 (CPU_CHAR   *)"ADC Driver",
-                 (OS_TASK_PTR ) adc_task,
-                 (void       *) 0,
-                 (OS_PRIO     ) ADC_PRIO,
-                 (CPU_STK    *)&g_adc_stack[0],
                  (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
                  (CPU_STK_SIZE) TASK_STACK_SIZE,
                  (OS_MSG_QTY  ) 0u,

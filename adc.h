@@ -9,6 +9,7 @@
 #ifndef _ADC_H
 #define _ADC_H
 
-void  adc_task (void * p_arg);
+void adc_init (void);
+uint16_t adc_read();
 
 #endif /* _ADC_H */

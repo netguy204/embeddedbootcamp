@@ -31,6 +31,7 @@
 #include "pushbutton.h"
 #include "common.h"
 #include "adc.h"
+#include "dive_time.h"
 #include "calculator.h"
 
 /*
@@ -251,10 +252,9 @@ void  main (void)
                  (OS_OPT      ) 0,
                  (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
-
+    
     OSStart(&err);                                              /* Start multitasking (i.e. give control to uC/OS-III). */
 
     // We should never get here.
     assert(0);
 }
-

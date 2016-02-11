@@ -24,4 +24,6 @@ enum { ASCENT_RATE_LIMIT = 15 };	    // Maximum safe ascent rate (in m/min).
 uint32_t gas_rate_in_cl(uint32_t depth_in_mm);
 uint32_t gas_to_surface_in_cl(uint32_t depth_in_mm);
 
+int32_t adc2rate(int32_t adc);
+
 #endif /* _SCUBA_H */

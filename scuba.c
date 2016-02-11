@@ -85,3 +85,23 @@ gas_to_surface_in_cl(uint32_t depth_in_mm)
 
 	return (gas);
 }
+
+static
+int32_t map(int32_t value, int32_t vmin, int32_t vmax, int32_t omin, int32_t omax) {
+  return omin + (((value - vmin) * (omax - omin)) / (vmax - vmin));
+}
+
+int32_t
+adc2rate(int32_t adc) {
+  if(adc <= 499) {
+    return map(adc, 0, 499, -40, 0);
+  } else if(adc >= 500 && adc <= 523) {
+    return 0;
+  } else if(adc >= 524 && adc <= 1023) {
+    return map(adc, 524, 1023, 0, 50);
+  } else {
+    assert(0);
+  }
+            
+}
+

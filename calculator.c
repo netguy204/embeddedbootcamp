@@ -101,6 +101,8 @@ void calculator_task(void* vptr) {
     
     adc = adc_read();
   
+
+    /* RATE and DEPTH */
     // calculate ASCENT RATE  int32_t rate_mm_per_m;
     int32_t descent_rate = adc2rate(adc);
     
@@ -109,19 +111,6 @@ void calculator_task(void* vptr) {
     } else {
         calcState.rate_mm_per_m = 0;
     }
-   
-    // check SW2 air changes
-    tankChangeInLiters =   getTankChange_inLiters();
-    if ((calcState.air_ml / 1000) + tankChangeInLiters > 2000) {
-      calcState.air_ml = 2000 * 1000;  // max value = 2000 L
-    } else {
-       // calculate air_ml assuming 500ms have passed since last update
-      calcState.air_ml += gas_rate_in_cl(calcState.depth_mm);     
-    }
-
-    // calculate  elapsed time (always a delta of 500 ms)
-    calcState.elapsed_time_s = get_dive_time_in_seconds();
-  
 
     // calculate DEPTH  int32_t depth_mm;
     calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m); 
@@ -130,6 +119,18 @@ void calculator_task(void* vptr) {
     if(calcState.depth_mm < 0) {
         calcState.depth_mm = 0;
     }
+    
+    /* UPDATE AIR */
+   
+    // check SW2 air changes
+    //tankChangeInLiters = getTankChange_inLiters();
+    if ((calcState.air_ml / 1000) + tankChangeInLiters > 2000) {
+      calcState.air_ml = 2000 * 1000;  // max value = 2000 L
+    } else {
+       // calculate air_ml assuming 500ms have passed since last update
+      calcState.air_ml += tankChangeInLiters;
+    }
+
 
     // calculate  uint32_t air_ml;
     uint32_t gas_rate = gas_rate_in_cl(calcState.depth_mm) * 10; // cl -> ml
@@ -139,12 +140,17 @@ void calculator_task(void* vptr) {
       calcState.air_ml = 0;
     }
     
+    /* UPDATE TIMER */
+
     // apply the timer logic
     timer_update(&calcState);
     
-    // calculate  elapsed time (always a delta of 500 ms)
+    // get value from timer
     calcState.elapsed_time_s = get_dive_time_in_seconds();
+  
 
+    /* DISPLAY STATE */
+    
     // determine alarm state  enum CurrentAlarm current_alarm;
     calculator_lcd_update(&calcState);
 

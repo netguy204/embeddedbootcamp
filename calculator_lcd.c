@@ -30,21 +30,21 @@ void calculator_lcd_update(CalculationState* state) {
   lcd_printf(0, "SCUBIE DUUBA");
   if(state->display_units == CALC_UNITS_METRIC) {
     lcd_printf(2, "DEPTH: %4d M", MM_TO_M(state->depth_mm));
-    lcd_printf(3, "RATE: %4d M", MM_TO_M(state->rate_mm_per_m));
+    lcd_printf(3, "RATE: %+5d M", MM_TO_M(state->rate_mm_per_m));
     
   } else {
     lcd_printf(2, "DEPTH: %4d FT", MM_TO_FT(state->depth_mm));
-    lcd_printf(3, "RATE: %4d FT", MM_TO_FT(state->rate_mm_per_m));
+    lcd_printf(3, "RATE: %+5d FT", MM_TO_FT(state->rate_mm_per_m));
   }
   
-  lcd_printf(4, "AIR: %4u L", ML_TO_L(state->air_ml));
+  lcd_printf(4, "AIR: %7u L", ML_TO_L(state->air_ml));
   
   uint32_t seconds = state->elapsed_time_s % 60;
   uint32_t remainder_minutes = state->elapsed_time_s / 60;
   uint32_t minutes = remainder_minutes % 60;
   uint32_t hours = remainder_minutes / 60;
   
-  lcd_printf(5, "EDT: %01u:%02u:%02u", hours, minutes, seconds);
+  lcd_printf(5, "EDT:      %01u:%02u:%02u", hours, minutes, seconds);
   
   char* alarm;
   switch(state->current_alarm) {
@@ -65,7 +65,7 @@ void calculator_lcd_update(CalculationState* state) {
     break;
   }
   
-  lcd_printf(7, "Alarm: %s", alarm);
+  lcd_printf(7, "Alarm:    %s", alarm);
 }
 
 

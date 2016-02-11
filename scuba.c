@@ -15,6 +15,7 @@
 #include <assert.h>
 
 #include "os.h"
+#include "assert.h"
 
 #include "scuba.h"
 
@@ -89,8 +90,7 @@ gas_to_surface_in_cl(uint32_t depth_in_mm)
 
 static
 int32_t map(int32_t value, int32_t vmin, int32_t vmax, int32_t omin, int32_t omax) {
-  int32_t scale = (omax - omin) / (vmax - vmin);
-  return omin + (value - vmin) * scale;
+  return omin + (((value - vmin) * (omax - omin)) / (vmax - vmin));
 }
 
 int32_t
@@ -103,6 +103,7 @@ adc2rate(int32_t adc) {
     return map(adc, 524, 1023, 0, 50);
   } else {
     assert(0);
+    return 0;
   }
   // NOTE: Silencing compiler warning
   return 0;

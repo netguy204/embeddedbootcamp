@@ -31,6 +31,7 @@
 #include "pushbutton.h"
 #include "common.h"
 #include "adc.h"
+#include "calculator.h"
 
 /*
 *********************************************************************************************************
@@ -38,7 +39,6 @@
 *********************************************************************************************************
 */
 #define HEALTH_LED   4
-#define NULL         0
 
 /*
 *********************************************************************************************************
@@ -65,6 +65,7 @@
 #define  DEBOUNCE_PRIO          7   // Every 50 ms, in a timed loop.
 #define  SW1_PRIO               8   // Up to every 50 ms, when held down.
 #define  ADC_PRIO               9   // Every 125 ms, in a timed loop.
+#define  CALC_PRIO             10   // Priority for calculor_task
 #define  SW2_PRIO              12   // Up to every 150 ms, if retriggered.
 #define  LED6_PRIO             13   // Every 167 ms, in a timed loop.
 #define  LED5_PRIO             14   // Every 500 ms, in a timed loop.
@@ -79,6 +80,7 @@ static CPU_STK  g_debounce_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw1_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw2_stack[TASK_STACK_SIZE];
 static CPU_STK  g_adc_stack[TASK_STACK_SIZE];
+static CPU_STK  g_calc_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
 static OS_TCB   g_startup_tcb;
@@ -88,6 +90,7 @@ static OS_TCB   g_debounce_tcb;
 static OS_TCB   g_sw1_tcb;
 static OS_TCB   g_sw2_tcb;
 static OS_TCB   g_adc_tcb;
+static OS_TCB   g_calc_tcb;
 
 // Allocate Shared OS Objects
 OS_SEM      g_sw1_sem;
@@ -114,8 +117,6 @@ static OS_TMR   g_health_timer;
 void
 scuba_health_task (void * p_tmr, void * p_arg)
 {
-    OS_ERR err;
-    
     (void) p_arg;
     (void) p_tmr;
     BSP_LED_Toggle(HEALTH_LED);
@@ -229,7 +230,6 @@ sw2_task (void * p_arg)
         BSP_GraphLCD_String(LCD_LINE2, (char const *) p_str);
     }
 }
-
 
 void
 startup_task (void * p_arg)
@@ -361,6 +361,22 @@ startup_task (void * p_arg)
                 &err);
     assert(OS_ERR_NONE == err);
     OSTmrStart(&g_health_timer, &err);
+    assert(OS_ERR_NONE == err);
+    
+     // Create the ADC task.
+    OSTaskCreate((OS_TCB     *)&g_calc_tcb,
+                 (CPU_CHAR   *)"Dive Calculations",
+                 (OS_TASK_PTR ) calculator_task,
+                 (void       *) 0,
+                 (OS_PRIO     ) CALC_PRIO,
+                 (CPU_STK    *)&g_calc_stack[0],
+                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+                 (CPU_STK_SIZE) TASK_STACK_SIZE,
+                 (OS_MSG_QTY  ) 0u,
+                 (OS_TICK     ) 0u,
+                 (void       *) 0,
+                 (OS_OPT      ) 0,
+                 (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
     
     // Delete the startup task (or enter an infinite loop like other tasks).

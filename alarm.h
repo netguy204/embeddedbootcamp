@@ -10,6 +10,8 @@
 #ifndef _ALARM_H
 #define _ALARM_H
 
+#include <os.h>
+
 #define BIT(n)  (1 << (n))
 
 #define ALARM_NONE    BIT(0)

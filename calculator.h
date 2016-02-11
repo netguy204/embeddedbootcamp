@@ -2,6 +2,7 @@
 #define CALCULATIONS_H
 
 #include "alarm.h"
+#include <stdint.h>
 
 enum DisplayUnits {
   CALC_UNITS_METRIC,

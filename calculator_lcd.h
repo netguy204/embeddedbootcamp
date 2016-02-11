@@ -5,6 +5,6 @@
 
 void calculator_lcd_init();
 
-void calculator_lcd_update(CalculationState* state);
+void calculator_lcd_update(struct CalculationState* state);
 
 #endif

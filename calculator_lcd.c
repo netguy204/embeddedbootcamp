@@ -7,7 +7,7 @@ void calculator_lcd_init() {
   BSP_GraphLCD_SetFont(GLYPH_FONT_8_BY_8);
 }
 
-void lcd_printf(uint8_t line, const char* msg, ...) {
+static void lcd_printf(uint8_t line, const char* msg, ...) {
   va_list args;
   char  p_str[LCD_CHARS_PER_LINE+1];
   
@@ -19,7 +19,7 @@ void lcd_printf(uint8_t line, const char* msg, ...) {
   va_end(args);
 }
 
-void calculator_lcd_update(CalculationState* state) {
+void calculator_lcd_update(struct CalculationState* state) {
   char  p_str[LCD_CHARS_PER_LINE+1];
   
   lcd_printf(0, "SCUBIE DUUBA");

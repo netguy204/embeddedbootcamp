@@ -37,7 +37,7 @@ void calculator_lcd_update(CalculationState* state) {
     lcd_printf(3, "RATE: %4d FT", MM_TO_FT(state->rate_mm_per_m));
   }
   
-  lcd_printf(4, "AIR: %4u L", ML_TO_L(state->depth_mm));
+  lcd_printf(4, "AIR: %4u L", ML_TO_L(state->air_ml));
   
   uint32_t seconds = state->elapsed_time_s % 60;
   uint32_t remainder_minutes = state->elapsed_time_s / 60;

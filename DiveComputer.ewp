@@ -1225,6 +1225,12 @@
     <name>$PROJ_DIR$\cpu_cfg.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\dive_time.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\dive_time.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\divecomputer.c</name>
   </file>
   <file>

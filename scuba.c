@@ -12,6 +12,7 @@
 **/
 
 #include <stdint.h>
+#include <assert.h>
 
 #include "os.h"
 #include "assert.h"
@@ -104,6 +105,7 @@ adc2rate(int32_t adc) {
     assert(0);
     return 0;
   }
-            
+  // NOTE: Silencing compiler warning
+  return 0;
 }
 

@@ -20,8 +20,16 @@ static void lcd_printf(uint8_t line, const char* msg, ...) {
   va_end(args);
 }
 
+#define MM_TO_M(mm) (mm / 1000)
+
+
 void calculator_lcd_update(struct CalculationState* state) {
   lcd_printf(0, "SCUBIE DUUBA");
+  if(state->display_units == CALC_UNITS_METRIC) {
+    lcd_printf(3, "DEPTH: %4u M", MM_TO_M(state->depth_mm));
+  } else {
+    // ft
+  }
 }
 
 

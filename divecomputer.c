@@ -64,12 +64,8 @@
 // Relative Task Priorities (0 = highest; 15 = idle task)
 #define  STARTUP_PRIO           1   // Highest priority, to launch others.
 #define  DEBOUNCE_PRIO          7   // Every 50 ms, in a timed loop.
-#define  SW1_PRIO               8   // Up to every 50 ms, when held down.
-#define  ADC_PRIO               9   // Every 125 ms, in a timed loop.
 #define  CALC_PRIO             10   // Priority for calculor_task
-#define  SW2_PRIO              12   // Up to every 150 ms, if retriggered.
-#define  LED6_PRIO             13   // Every 167 ms, in a timed loop.
-#define  LED5_PRIO             14   // Every 500 ms, in a timed loop.
+#define  ALARM_PRIO             6   // Alarm priority
 
 // Allocate Task Stacks
 #define  TASK_STACK_SIZE      128
@@ -77,11 +73,13 @@
 static CPU_STK  g_startup_stack[TASK_STACK_SIZE];
 static CPU_STK  g_debounce_stack[TASK_STACK_SIZE];
 static CPU_STK  g_calc_stack[TASK_STACK_SIZE];
+static CPU_STK  g_alarm_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
 static OS_TCB   g_startup_tcb;
 static OS_TCB   g_debounce_tcb;
 static OS_TCB   g_calc_tcb;
+static OS_TCB   g_alarm_tcb;
 
 // Timers
 static OS_TMR   g_health_timer;
@@ -127,6 +125,10 @@ startup_task (void * p_arg)
     
     // Initialize the reentrant LED driver.
     protectedLED_Init();
+    
+    // Create flags shared by alarm and calculator tasks
+    OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
+    assert(OS_ERR_NONE == err);
 
     // Create the semaphores signaled by the button debouncer.
     OSSemCreate(&g_sw1_sem, "Switch 1", 0, &err);
@@ -171,6 +173,22 @@ startup_task (void * p_arg)
                  (void       *) 0,
                  (OS_PRIO     ) CALC_PRIO,
                  (CPU_STK    *)&g_calc_stack[0],
+                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+                 (CPU_STK_SIZE) TASK_STACK_SIZE,
+                 (OS_MSG_QTY  ) 0u,
+                 (OS_TICK     ) 0u,
+                 (void       *) 0,
+                 (OS_OPT      ) 0,
+                 (OS_ERR     *)&err);
+    assert(OS_ERR_NONE == err);
+    
+    // Create the alarm task.
+    OSTaskCreate((OS_TCB     *)&g_alarm_tcb,
+                 (CPU_CHAR   *)"Alarms",
+                 (OS_TASK_PTR ) alarm_task,
+                 (void       *) 0,
+                 (OS_PRIO     ) ALARM_PRIO,
+                 (CPU_STK    *)&g_alarm_stack[0],
                  (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
                  (CPU_STK_SIZE) TASK_STACK_SIZE,
                  (OS_MSG_QTY  ) 0u,

@@ -16,14 +16,14 @@ enum CurrentAlarm {
   CALC_ALARM_HIGH = ALARM_HIGH
 };
 
-struct CalculationState {
+typedef struct {
   int32_t depth_mm;
   int32_t rate_mm_per_m;
   uint32_t air_ml;
   uint32_t elapsed_time_s;
   enum DisplayUnits display_units;
   enum CurrentAlarm current_alarm;
-};
+}CalculationState;
 
 void calculator_task(void* vptr);
 

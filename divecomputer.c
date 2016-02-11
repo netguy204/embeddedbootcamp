@@ -335,21 +335,21 @@ startup_task (void * p_arg)
                  (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
 
-    // Create the ADC task.
-    OSTaskCreate((OS_TCB     *)&g_adc_tcb,
-                 (CPU_CHAR   *)"ADC Driver",
-                 (OS_TASK_PTR ) adc_task,
-                 (void       *) 0,
-                 (OS_PRIO     ) ADC_PRIO,
-                 (CPU_STK    *)&g_adc_stack[0],
-                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
-                 (CPU_STK_SIZE) TASK_STACK_SIZE,
-                 (OS_MSG_QTY  ) 0u,
-                 (OS_TICK     ) 0u,
-                 (void       *) 0,
-                 (OS_OPT      ) 0,
-                 (OS_ERR     *)&err);
-    assert(OS_ERR_NONE == err);
+//    // Create the ADC task.
+//    OSTaskCreate((OS_TCB     *)&g_adc_tcb,
+//                 (CPU_CHAR   *)"ADC Driver",
+//                 (OS_TASK_PTR ) adc_task,
+//                 (void       *) 0,
+//                 (OS_PRIO     ) ADC_PRIO,
+//                 (CPU_STK    *)&g_adc_stack[0],
+//                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+//                 (CPU_STK_SIZE) TASK_STACK_SIZE,
+//                 (OS_MSG_QTY  ) 0u,
+//                 (OS_TICK     ) 0u,
+//                 (void       *) 0,
+//                 (OS_OPT      ) 0,
+//                 (OS_ERR     *)&err);
+//    assert(OS_ERR_NONE == err);
 
     OSTmrCreate(&g_health_timer,
                 "Scuba Health Timer",

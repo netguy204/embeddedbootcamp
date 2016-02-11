@@ -105,7 +105,5 @@ adc2rate(int32_t adc) {
     assert(0);
     return 0;
   }
-  // NOTE: Silencing compiler warning
-  return 0;
 }
 

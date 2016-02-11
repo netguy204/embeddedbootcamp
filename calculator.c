@@ -9,10 +9,19 @@
 #include "dive_time.h"
 #include  <os.h>
 
-void post_alarms(CalculationState *currState){	
+void updateAlarms(CalculationState *currState){
+  if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml)
+    currState->current_alarm|=ALARM_HIGH;
+  if(15<currState->rate_mm_per_m)
+    currState->current_alarm|=ALARM_MEDIUM;
+  if(40000<currState->depth_mm)
+    currState->current_alarm|=ALARM_LOW;  
+}
+
+void postAlarms(CalculationState *currState){	
   OS_ERR err;
-  
-  OSFlagPost(&g_alarm_flags, currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
+
+  OSFlagPost(&g_alarm_flags, ALARM_HIGH, OS_OPT_POST_FLAG_SET,&err);
   assert(OS_ERR_NONE == err);
 }
 
@@ -144,7 +153,10 @@ void calculator_task(void* vptr) {
     
     // get value from timer
     calcState.elapsed_time_s = get_dive_time_in_seconds();
-  
+    
+    // alarms
+    updateAlarms(&calcState);
+    postAlarms(&calcState);
 
     /* DISPLAY STATE */
     

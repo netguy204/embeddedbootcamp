@@ -127,7 +127,7 @@ startup_task (void * p_arg)
     protectedLED_Init();
     
     // Create flags shared by alarm and calculator tasks
-    OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
+    OSFlagCreate(&g_alarm_flags, "Alarm Flag", ALARM_NONE, &err);
     assert(OS_ERR_NONE == err);
 
     // Create the semaphores signaled by the button debouncer.

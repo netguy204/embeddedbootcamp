@@ -1,18 +1,14 @@
 #include "calculator.h"
 #include "calculator_lcd.h"
+#include "pushbutton.h"
+#include "alarm.h"
+#include "adc.h"
 
 #include "scuba.h"
 #include "adc.h"
 #include  "assert.h"
-#include "adc.h"
-#include "pushbutton.h"
 
 #include  <os.h>
-
-// Allocate Shared OS Objects
-OS_FLAG_GRP g_alarm_flags;
-OS_SEM          g_sw1_sem;
-OS_SEM          g_sw2_sem;
 
 void post_alarms(struct CalculationState *currState){	
   OS_ERR err;
@@ -78,7 +74,7 @@ void calculator_task(void* vptr) {
     
     adc = adc_read();
     // calculate DIVE RATE  int32_t rate_mm_per_m;
-    calcState.rate_mm_per_m =  1000 * ADC2RATE(adc);
+    calcState.rate_mm_per_m =  1000 * adc2rate(adc);
     // calculate DEPTH  int32_t depth_mm;
     calcState.depth_mm += 2 * 0.5 * depth_change_in_mm(calcState.rate_mm_per_m);
     // calculate  uint32_t air_ml;

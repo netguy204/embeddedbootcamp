@@ -30,7 +30,7 @@ static OS_TICK period(uint32_t milliseconds) {
 // Local Variables
 static OS_TMR g_dive_timer;
 static volatile uint32_t g_elapsed_dive_time;
-static uint8_t gb_is_timer_stopped;
+static uint8_t gb_is_timer_stopped = 1;
 
 void 
 increment_timer_callback(void * p_tmr, void * p_arg) {
@@ -109,4 +109,10 @@ reset_timer(void)
         err = TMR_ERR_TMR_STILL_ON;
     }
     return err;
+}
+
+uint8_t
+is_timer_off(void)
+{
+    return gb_is_timer_stopped;
 }

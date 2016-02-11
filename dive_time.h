@@ -19,5 +19,6 @@ void start_timer(uint8_t b_is_new_timer);
 void stop_timer(void);
 uint32_t get_dive_time_in_seconds(void);
 TMR_ERR reset_timer(void);
+uint8_t is_timer_off(void);
 
 #endif /* _DIVE_TIME_H*/

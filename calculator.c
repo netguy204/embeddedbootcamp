@@ -90,13 +90,16 @@ void calculator_task(void* vptr) {
         calcState.depth_mm = 0;
     }
  
-    if (calcState.depth_mm < 0) 
+    if (calcState.depth_mm > 0)
     {
-        start_timer(b_is_new_timer);
-        // This will only trigger the first time we dive
-        if (b_is_new_timer)
+        if (is_timer_off()) 
         {
-            b_is_new_timer = 0;
+            start_timer(b_is_new_timer);
+            // This will only trigger the first time we dive
+            if (b_is_new_timer)
+            {
+                b_is_new_timer = 0;
+            }
         }
     }
     else

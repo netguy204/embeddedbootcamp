@@ -20,6 +20,7 @@ void post_alarms(struct CalculationState *currState){
 uint16_t getTankChange_inLiters(){
   uint16_t buttonPresses=0;
   // Wait for a signal from the button debouncer.
+  OS_ERR err;
   while(OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_NON_BLOCKING, 0, &err), OS_ERR_PEND_WOULD_BLOCK==err){
     buttonPresses++;
   }

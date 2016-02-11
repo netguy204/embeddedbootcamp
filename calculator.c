@@ -1,12 +1,27 @@
 #include "calculator.h"
 #include "scuba.h"
+#include  "assert.h"
+#include  <os.h>
 
 
+
+OS_FLAG_GRP g_alarm_flags;
+
+void post_alarms(struct CalculationState *currState){	
+  OS_ERR err;
+  
+  OSFlagPost(&g_alarm_flags, currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
+  assert(OS_ERR_NONE == err);
+}
 
 void calculator_task(void* vptr) {
 
+
   struct  CalculationState calcState;
   uint16_t adc = 0;
+  OS_ERR err;
+  
+  
   // init values
   calcState.depth_mm = 0;
   calcState.rate_mm_per_m = 0;
@@ -14,6 +29,9 @@ void calculator_task(void* vptr) {
   calcState.elapsed_time_s = 0;
   calcState.current_alarm = CALC_ALARM_NONE;
   calcState.display_units = CALC_UNITS_METRIC;
+  
+  OSFlagCreate(&g_alarm_flags, "Alarm Flag", 0, &err);
+  assert(OS_ERR_NONE == err);
   
   for (;;) 
   {

@@ -16,15 +16,15 @@ void post_alarms(CalculationState *currState){
   assert(OS_ERR_NONE == err);
 }
 
-uint16_t getTankChange_inLiters(){
+uint16_t getTankChange_ml(){
   uint16_t buttonPresses=0;
   // Wait for a signal from the button debouncer.
   OS_ERR err;
-  while(OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_NON_BLOCKING, 0, &err), OS_ERR_PEND_WOULD_BLOCK==err){
+  while(OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_NON_BLOCKING, 0, &err), OS_ERR_PEND_WOULD_BLOCK!=err){
     buttonPresses++;
   }
   
-  return buttonPresses*5;
+  return buttonPresses*5000;
 }
 
 uint8_t g_b_is_new_timer;
@@ -59,7 +59,7 @@ void calculator_task(void* vptr) {
 
 
   CalculationState calcState; 
-  uint16_t tankChangeInLiters = 0;
+  uint16_t tankChange_ml = 0;
   uint16_t adc = 0;
   OS_ERR err;
   
@@ -111,7 +111,7 @@ void calculator_task(void* vptr) {
     } else {
         calcState.rate_mm_per_m = 0;
     }
-
+    
     // calculate DEPTH  int32_t depth_mm;
     calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m); 
     
@@ -120,18 +120,13 @@ void calculator_task(void* vptr) {
         calcState.depth_mm = 0;
     }
     
+    
     /* UPDATE AIR */
    
     // check SW2 air changes
-    //tankChangeInLiters = getTankChange_inLiters();
-    if ((calcState.air_ml / 1000) + tankChangeInLiters > 2000) {
-      calcState.air_ml = 2000 * 1000;  // max value = 2000 L
-    } else {
-       // calculate air_ml assuming 500ms have passed since last update
-      calcState.air_ml += tankChangeInLiters;
-    }
-
-
+    tankChange_ml =   getTankChange_ml();
+    calcState.air_ml = (calcState.air_ml + tankChange_ml > 2000000) ? 2000000 : calcState.air_ml + tankChange_ml;
+    
     // calculate  uint32_t air_ml;
     uint32_t gas_rate = gas_rate_in_cl(calcState.depth_mm) * 10; // cl -> ml
     if(gas_rate < calcState.air_ml) {

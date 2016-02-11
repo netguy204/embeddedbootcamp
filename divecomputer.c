@@ -37,6 +37,8 @@
 *                                            LOCAL DEFINES
 *********************************************************************************************************
 */
+#define HEALTH_LED   4
+#define NULL         0
 
 /*
 *********************************************************************************************************
@@ -91,6 +93,8 @@ static OS_TCB   g_adc_tcb;
 OS_SEM      g_sw1_sem;
 OS_SEM      g_sw2_sem;
 
+// Timers
+static OS_TMR   g_health_timer;
 /*
 *********************************************************************************************************
 *                                            LOCAL MACRO'S
@@ -103,6 +107,20 @@ OS_SEM      g_sw2_sem;
 *                                      LOCAL FUNCTION PROTOTYPES
 *********************************************************************************************************
 */
+
+/*!
+* @brief Scuba health task
+*/
+void
+scuba_health_task (void * p_tmr, void * p_arg)
+{
+    OS_ERR err;
+    
+    (void) p_arg;
+    (void) p_tmr;
+    BSP_LED_Toggle(HEALTH_LED);
+}
+
 /*!
 * @brief LED Flasher Task
 */
@@ -333,6 +351,18 @@ startup_task (void * p_arg)
                  (OS_ERR     *)&err);
     assert(OS_ERR_NONE == err);
 
+    OSTmrCreate(&g_health_timer,
+                "Scuba Health Timer",
+                0,
+                167 / 4u,
+                OS_OPT_TMR_PERIODIC,
+                scuba_health_task,
+                NULL,
+                &err);
+    assert(OS_ERR_NONE == err);
+    OSTmrStart(&g_health_timer, &err);
+    assert(OS_ERR_NONE == err);
+    
     // Delete the startup task (or enter an infinite loop like other tasks).
     OSTaskDel((OS_TCB *)0, &err);
 

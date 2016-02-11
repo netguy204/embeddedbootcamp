@@ -16,6 +16,9 @@
 
 #include "alarm.h"
 
+// Global Definition
+OS_FLAG_GRP g_alarm_flags;
+
 
 // PWM Prescalars
 typedef enum { TONE_HI = 450, TONE_MED = 700, TONE_LO = 950 } pwm_t;

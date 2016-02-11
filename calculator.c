@@ -1,15 +1,12 @@
 #include "calculator.h"
 #include "calculator_lcd.h"
+#include "pushbutton.h"
+#include "alarm.h"
+#include "adc.h"
 
 #include "scuba.h"
 #include  "assert.h"
 #include  <os.h>
-
-
-
-OS_FLAG_GRP     g_alarm_flags;
-OS_SEM          g_sw1_sem;
-OS_SEM          g_sw2_sem;
 
 void post_alarms(struct CalculationState *currState){	
   OS_ERR err;

@@ -13,7 +13,11 @@
 #include "os.h"
 #include "iorx63n.h"
 
-#include "pushbutton.h"								
+#include "pushbutton.h"	
+
+// Global definitions
+OS_SEM          g_sw1_sem;
+OS_SEM          g_sw2_sem;
 
 
 /*!

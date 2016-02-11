@@ -60,9 +60,15 @@ adc_t volatile * const p_adc = (adc_t *) 0x00089000;
 /*!
 * @brief Configure the ADC hardware to read Potentiometer VR1 and interrupt.
 */
-static
-void adc_config (void)
+void
+adc_init (void)
 {
+    OS_ERR err;
+    
+    /* create our reply queue */
+    OSQCreate(&g_adc_q, "ADC Queue", 1, &err);
+    assert(OS_ERR_NONE == err);
+    
     /* Protection off */
     SYSTEM.PRCR.WORD = 0xA503u;            
     
@@ -91,46 +97,19 @@ void adc_config (void)
     adc.channel_select0 = BIT(ADC_SOURCE_VR1);
 }
 
-/*!
-*
-* @brief: ADC Driver Task
-*/
-void
-adc_task (void * p_arg)
-{
-    OS_ERR     err;
-
-
-    (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-
-    // Create message queue.
-    // NOTE: It's safe to do this here, because the ISR is synchornized to us.
-    OSQCreate(&g_adc_q, "ADC Queue", 1, &err);
-    assert(OS_ERR_NONE == err);	
-
-    // Configure ADC hardware to read Potentiometer VR1 and interrupt.
-    adc_config();
-	
-    for (;;)	
-    {
-        // Wait 125 ms.
-        OSTimeDlyHMSM(0, 0, 0, 125, OS_OPT_TIME_HMSM_STRICT, &err);
-											
-        // Trigger ADC conversion.
-        adc.control |= ADC_START;
-			
-        // Wait for message from ADC ISR.
-        OS_MSG_SIZE  msg_size;
-
-	uint16_t * p_sample = (uint16_t *)
-        OSQPend(&g_adc_q, 0, OS_OPT_PEND_BLOCKING, &msg_size, NULL, &err);
-	assert(OS_ERR_NONE == err);
-
-        // Format and display the value.
-        char  p_str[LCD_CHARS_PER_LINE+1];
-        sprintf(p_str, "POT: % 4u", *p_sample);
-        BSP_GraphLCD_String(LCD_LINE5, (char const *) p_str);
-    }
+uint16_t
+adc_read() {
+    OS_ERR err;
+    OS_MSG_SIZE  msg_size;
+    
+    // Trigger ADC conversion.
+    adc.control |= ADC_START;
+    
+    uint16_t * p_sample = (uint16_t *)
+                          OSQPend(&g_adc_q, 0, OS_OPT_PEND_BLOCKING, &msg_size, NULL, &err);
+    assert(OS_ERR_NONE == err);
+    
+    return *p_sample;
 }
 
 /*!

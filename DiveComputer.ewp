@@ -1219,6 +1219,9 @@
     <name>$PROJ_DIR$\calculator.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\calculator_lcd.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\cpu_cfg.h</name>
   </file>
   <file>

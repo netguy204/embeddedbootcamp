@@ -113,7 +113,7 @@ void calculator_task(void* vptr) {
     }
     
     // calculate DEPTH  int32_t depth_mm;
-    calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m); 
+    calcState.depth_mm += depth_change_in_mm(calcState.rate_mm_per_m / 1000); 
     
     // no flying divers
     if(calcState.depth_mm < 0) {

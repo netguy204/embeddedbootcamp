@@ -108,7 +108,7 @@ void calculator_task(void* vptr) {
     }
 
     // calculate  uint32_t air_ml;
-    calcState.air_ml += gas_rate_in_cl(calcState.depth_mm);
+    calcState.air_ml -= gas_rate_in_cl(calcState.depth_mm);
     // calculate  elapsed time (always a delta of 500 ms)
     calcState.elapsed_time_s = get_dive_time_in_seconds();
     // determine  DisplayUnits - check if SW2 has been toggled

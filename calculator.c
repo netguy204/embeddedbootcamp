@@ -9,7 +9,7 @@
 #include "dive_time.h"
 #include  <os.h>
 
-void post_alarms(struct CalculationState *currState){	
+void post_alarms(CalculationState *currState){	
   OS_ERR err;
   
   OSFlagPost(&g_alarm_flags, currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
@@ -30,7 +30,7 @@ uint16_t getTankChange_inLiters(){
 void calculator_task(void* vptr) {
 
 
-  struct  CalculationState calcState;
+  CalculationState calcState;
   uint16_t adc = 0;
   OS_ERR err;
   uint8_t b_is_new_timer = 1u;

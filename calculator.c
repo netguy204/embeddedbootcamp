@@ -43,7 +43,8 @@ void calculator_task(void* vptr) {
   int32_t adc = 0;
   CalculationState calcState;
   OS_ERR err;  
-  
+  uint16_t tankChangeInLiters = 0;
+
   calculator_lcd_init();
   adc_init();
   
@@ -82,10 +83,19 @@ void calculator_task(void* vptr) {
     calcState.rate_mm_per_m =  1000 * adc2rate(adc);
     // calculate DEPTH  int32_t depth_mm;
     calcState.depth_mm += 2 * 0.5 * depth_change_in_mm(calcState.rate_mm_per_m);
-    // calculate  uint32_t air_ml;
-    calcState.air_ml += 2 * 0.5 * gas_rate_in_cl(calcState.depth_mm);
+    
+    // check SW2 air changes
+    tankChangeInLiters =   getTankChange_inLiters();
+    if ((calcState.air_ml / 1000) + tankChangeInLiters > 2000) {
+      calcState.air_ml = 2000 * 1000;  // max value = 2000 L
+    } else {
+       // calculate  uint32_t air_ml;
+      calcState.air_ml += 2 * 0.5 * gas_rate_in_cl(calcState.depth_mm);     
+    }
+
     // calculate  elapsed time (always a delta of 500 ms)
     calcState.elapsed_time_s += 0.5;
+    
     // determine  DisplayUnits - check if SW2 has been toggled
 
     // determine alarm state  enum CurrentAlarm current_alarm;

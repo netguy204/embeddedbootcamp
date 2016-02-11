@@ -9,7 +9,7 @@
 #include  "assert.h"
 #include  <os.h>
 
-void post_alarms(struct CalculationState *currState){	
+void post_alarms(CalculationState *currState){	
   OS_ERR err;
   
   OSFlagPost(&g_alarm_flags, currState->current_alarm, OS_OPT_POST_FLAG_SET,&err);
@@ -27,10 +27,19 @@ uint16_t getTankChange_inLiters(){
   return buttonPresses*5;
 }
 
+void updateAlarms(CalculationState *currState){
+  if(gas_to_surface_in_cl(currState->depth_mm)>currState->air_ml)
+    currState->current_alarm|=ALARM_HIGH;
+  if(15<currState->rate_mm_per_m)
+    currState->current_alarm|=ALARM_MEDIUM;
+  if(40000<currState->depth_mm)
+    currState->current_alarm|=ALARM_LOW;  
+}
+
 void calculator_task(void* vptr) {
 
 
-  struct  CalculationState calcState;
+  CalculationState calcState;
   uint16_t adc = 0;
   OS_ERR err;
   
@@ -63,6 +72,10 @@ void calculator_task(void* vptr) {
 
     // determine alarm state  enum CurrentAlarm current_alarm;
     calculator_lcd_update(&calcState);
+    
+    // post alarm flags
+    updateAlarms(&calcState);
+    post_alarms(&calcState);    
 
     // sleep 500 ms
     OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);

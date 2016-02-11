@@ -72,12 +72,6 @@ void calculator_task(void* vptr) {
         {
             stop_timer();
         }
-        else
-        {
-            // We should never be here. If a timer wasn't created, it shouldn't
-            // be getting stopped
-            assert(0);
-        }
     }
     // calculate DIVE RATE  int32_t rate_mm_per_m;
     calcState.rate_mm_per_m =  1000 * ADC2RATE(adc);

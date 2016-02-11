@@ -1,4 +1,6 @@
 #include "calculator.h"
+#include "calculator_lcd.h"
+
 #include "scuba.h"
 #include  "assert.h"
 #include  <os.h>
@@ -33,6 +35,10 @@ void calculator_task(void* vptr) {
   OS_ERR err;
   
   
+  calculator_lcd_init();
+  adc_init();
+  
+  
   // init values
   calcState.depth_mm = 0;
   calcState.rate_mm_per_m = 0;
@@ -59,6 +65,9 @@ void calculator_task(void* vptr) {
 // determine  DisplayUnits - check if SW2 has been toggled
   
 // determine alarm state  enum CurrentAlarm current_alarm;
+      calculator_lcd_update(&calcState);
+      
+      // sleep 500 ms
+      OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
   }
-                                                     
 }

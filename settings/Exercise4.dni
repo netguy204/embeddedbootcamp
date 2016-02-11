@@ -1,0 +1,44 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[Breakpoints]
+Count=0
+[Monitor Execution]
+Leave target running=0
+Release target=0
+[Aliases]
+Count=0
+SuppressDialog=0
+[J-Link]
+RecordingCondition=0
+TraceMode=0
+TraceOutput=0
+TraceType=0
+TraceCapacity=0
+TraceRestart=0
+TraceTimeStamp=0
+TraceTimestampDivision=0
+TraceDataTransfer=1
+TraceStackOperation=1
+TraceStringOperation=1
+TraceArithmeticalOperation=1
+TraceLogicalOperation=1
+TraceBitOperation=1
+TraceFPU=1
+TraceException=1
+OperatingFrequency=22.000000
+PerfEnabled=0
+PerfCondition=0,0
+PerfDisplayTime=0,0
+PerfOnlyOnce=0,0
+PerfUse64Bit=0
+[Trace1]
+Enabled=0
+ShowSource=1

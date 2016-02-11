@@ -62,6 +62,7 @@ start_timer(uint8_t b_is_new_timer)
     // We will just start the timer (possibly again)
     OSTmrStart(&g_dive_timer, &err);
     assert(OS_ERR_NONE == err);
+    gb_is_timer_stopped = 0;
 }
 
 /*!
@@ -76,6 +77,7 @@ stop_timer(void)
               NO_ARGS,
               &err);
     assert(OS_ERR_NONE == err);
+    gb_is_timer_stopped = 1;
 }
 
 /*!

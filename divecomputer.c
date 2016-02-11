@@ -38,7 +38,6 @@
 *********************************************************************************************************
 */
 #define HEALTH_LED   4
-#define NULL         0
 
 /*
 *********************************************************************************************************
@@ -114,8 +113,6 @@ static OS_TMR   g_health_timer;
 void
 scuba_health_task (void * p_tmr, void * p_arg)
 {
-    OS_ERR err;
-    
     (void) p_arg;
     (void) p_tmr;
     BSP_LED_Toggle(HEALTH_LED);

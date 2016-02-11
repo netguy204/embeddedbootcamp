@@ -124,15 +124,17 @@ void calculator_task(void* vptr) {
     /* UPDATE AIR */
    
     // check SW2 air changes
-    tankChange_ml =   getTankChange_ml();
-    calcState.air_ml = (calcState.air_ml + tankChange_ml > 2000000) ? 2000000 : calcState.air_ml + tankChange_ml;
-    
-    // calculate  uint32_t air_ml;
-    uint32_t gas_rate = gas_rate_in_cl(calcState.depth_mm) * 10; // cl -> ml
-    if(gas_rate < calcState.air_ml) {
-      calcState.air_ml -= gas_rate;
+    if(calcState.depth_mm == 0) {
+        tankChange_ml =   getTankChange_ml();
+        calcState.air_ml = (calcState.air_ml + tankChange_ml > 2000000) ? 2000000 : calcState.air_ml + tankChange_ml;
     } else {
-      calcState.air_ml = 0;
+        // calculate  uint32_t air_ml;
+        uint32_t gas_rate = gas_rate_in_cl(calcState.depth_mm) * 10; // cl -> ml
+        if(gas_rate < calcState.air_ml) {
+          calcState.air_ml -= gas_rate;
+        } else {
+          calcState.air_ml = 0;
+        }
     }
     
     /* UPDATE TIMER */

@@ -15,8 +15,14 @@ void post_alarms(struct CalculationState *currState){
   assert(OS_ERR_NONE == err);
 }
 
-uint16_t getTankChange(){
-  OSSemPost(&g_sw1_sem, OS_OPT_POST_1, &err);
+uint16_t getTankChange_inLiters(){
+  uint16_t buttonPresses=0;
+  // Wait for a signal from the button debouncer.
+  while(OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_NON_BLOCKING, 0, &err), OS_ERR_PEND_WOULD_BLOCK==err){
+    buttonPresses++;
+  }
+  
+  return buttonPresses*5;
 }
 
 void calculator_task(void* vptr) {

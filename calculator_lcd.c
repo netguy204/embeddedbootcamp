@@ -42,7 +42,7 @@ calculator_lcd_update(CalculationState* state)
         lcd_printf(3, "     YOU LOSE");
     } else {
         if(state->display_units == CALC_UNITS_METRIC) {
-            lcd_printf(2, "DEPTH: %4d M", MM_TO_M(state->depth_mm));
+            lcd_printf(2, "AHHH: %4d M", MM_TO_M(state->depth_mm));
             lcd_printf(3, "RATE: %+5d M", MM_TO_M(state->rate_mm_per_m));          
         } else {
             lcd_printf(2, "DEPTH: %4d FT", MM_TO_FT(state->depth_mm));

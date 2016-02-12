@@ -19,6 +19,22 @@
 @REM 
 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.0\rx\bin\rxproc.dll" "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.0\rx\bin\rxjlink.dll"  %1 --plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.0\rx\bin\rxbat.dll" --backend -B "-p" "C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.0\rx\config\debugger\ior5f563nb.ddf" "--endian" "l" "--double" "32" "--core" "rxv1" "--int" "32" "-d" "jlink" "--drv_mode" "debugging" "--drv_communication" "USB" 
+@echo off 
 
+if not "%1" == "" goto debugFile 
 
+@echo on 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "C:\Users\reavemt1\Documents\Projects\Embedded Software Bootcamp\Exercises\HandsOn\embeddedbootcamp\settings\DiveComputer.Debug.general.xcl" --backend -f "C:\Users\reavemt1\Documents\Projects\Embedded Software Bootcamp\Exercises\HandsOn\embeddedbootcamp\settings\DiveComputer.Debug.driver.xcl" 
+
+@echo off 
+goto end 
+
+:debugFile 
+
+@echo on 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.2\common\bin\cspybat" -f "C:\Users\reavemt1\Documents\Projects\Embedded Software Bootcamp\Exercises\HandsOn\embeddedbootcamp\settings\DiveComputer.Debug.general.xcl" "--debug_file=%1" --backend -f "C:\Users\reavemt1\Documents\Projects\Embedded Software Bootcamp\Exercises\HandsOn\embeddedbootcamp\settings\DiveComputer.Debug.driver.xcl" 
+
+@echo off 
+:end

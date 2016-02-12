@@ -139,9 +139,9 @@
     </settings>
     <settings>
       <name>RXEMUE20</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>4</archiveVersion>
       <data>
-        <version>3</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -180,13 +180,74 @@
           <name>OCDownloadOnlyChangedBlocks</name>
           <state>0</state>
         </option>
+        <option>
+          <name>E20LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>E20DoLogfile</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>RXE2LITE</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>E2LiteMandatory</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>E2LiteUseUSBSerialNo</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteUSBSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>E2LiteDownloadSuppressDownload</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteDownloadVerifyAll</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteDownloadAttach</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteDebuggingMode</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteDownloadExcecuteAfterFlash</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteDownloadOnlyChangedBlocks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E2LiteLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>E2LiteDoLogfile</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>RXJLINK</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>4</archiveVersion>
       <data>
-        <version>4</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -237,6 +298,14 @@
           <name>OCJlinkUSBSerialNo</name>
           <state></state>
         </option>
+        <option>
+          <name>JLinkLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>JLinkDoLogfile</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -271,6 +340,10 @@
       </plugin>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\Quadros\Quadros_EWB7_Plugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
